@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <title>Previsao do Tempo</title>
+</head>
+
+<body>
+    <div class="caixa-input">
+        <div class="pesquisar">
+            <input placeholder="Pesquisar..." id="input"/>
+            <button onclick="pesquisarPrevisao()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <h2 class="title" id="titulo"></h2>
+        <p class="graus" id="temperatura"></p>
+        <p class="nuvem" id="descricao"></p>
+        <p class="humidade" id="umidade"></p>
+    </div>
+</body>
+<script>
+    let chave = "50e58f286d342f4a3848c51abee14230";
+   async function BuscarCidade(valueInput){
+    let dados = await fetch("https://api.openweathermap.org/data/2.5/weather?q=" + 
+    valueInput + 
+    "&appid=" + 
+    chave +
+    "&lang=pt_br" +
+    "&units=metric")
+    .then( resposta => resposta.json());
+
+    let clima = dados.weather[0].main;
+    let descricao = dados.weather[0].description;
+    let emoji = getIconElement(clima);
+
+    document.getElementById('titulo').innerText = "Tempo " + dados.name;
+    document.getElementById('temperatura').innerText = Math.round(dados.main.temp) + "°C";
+    document.getElementById('descricao').innerText = `${emoji} ${descricao}`
+    document.getElementById('umidade').innerText = "Umidade: " + dados.main.humidity + "%";
+   }
+
+    function pesquisarPrevisao(){
+        let valueInput = document.getElementById('input').value;
+        BuscarCidade(valueInput);
+    }
+    
+
+    function getIconElement(main){
+        switch(main) {
+        case "Clear":
+            return "☀️";
+        case "Clouds":
+            return "☁️";
+        case "Rain":
+            return "🌧";
+        case "Drizzle":
+            return "🌦";
+        case "Thunderstorm":
+            return "⛈";
+        case "Snow":
+            return "❄️";
+        case "Mist":
+        case "Fog":
+        case "Haze":
+            return "🌫️";
+        default:
+            return "🌥";
+    }
+    }
+    
+</script>
+</html>
