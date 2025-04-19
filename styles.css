@@ -91,3 +91,9 @@ span{
     color: white;
     font-size: 30px;
 }
+
+@media (max-width: 600px) {
+    .caixa-input{
+        width: 90%;
+    }
+  }
